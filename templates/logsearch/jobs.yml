@@ -1,0 +1,107 @@
+name: (( merge ))
+
+jobs:
+- name: api
+  release: logsearch
+  templates: 
+  - name: elasticsearch
+  - name: api
+  - name: collectd
+  update:
+    serial: true
+  instances: (( merge ))
+  resource_pool: common
+  networks:
+  - name: default
+    static_ips: ~
+  properties:
+    collectd:
+      python_elasticsearch:
+        enabled: true
+    elasticsearch:
+      node:
+        allow_data: false
+    logstash_forwarder:
+      job_files:
+      - path: /var/vcap/sys/log/elasticsearch/requests.log
+        type: elasticsearch_request
+      - path: /var/vcap/sys/log/api/nginx.access.log
+        type: nginx_access
+      - path: /var/vcap/sys/log/api/nginx.error.log
+        type: nginx_error
+
+- name: ingestor
+  release: logsearch
+  templates:
+  - name: collectd
+  - name: ingestor_lumberjack
+  - name: ingestor_syslog
+  - name: ingestor_relp
+  instances: (( merge ))
+  resource_pool: common
+  networks:
+  - name: default
+    static_ips: ~
+
+- name: queue
+  release: logsearch
+  templates:
+  - name: collectd
+  - name: queue
+  instances: (( merge ))
+  resource_pool: common
+  networks:
+  - name: default
+    static_ips: ~
+  properties:
+    collectd:
+      python_redis:
+        enabled: true
+
+- name: log_parser
+  release: logsearch
+  templates:
+  - name: collectd
+  - name: log_parser
+  instances: (( merge ))
+  resource_pool: common
+  networks:
+  - name: default
+    default: [dns, gateway]
+
+- name: elasticsearch_persistent
+  release: logsearch
+  templates:
+  - name: elasticsearch
+  - name: collectd
+  update:
+    serial: true
+  instances: (( merge ))
+  resource_pool: elasticsearch
+  networks:
+  - name: default
+    static_ips: ~
+  persistent_disk: (( merge ))
+  properties:
+    collectd:
+      python_elasticsearch:
+        enabled: true
+    elasticsearch:
+      node:
+        allow_master: false
+
+networks: (( merge ))
+
+properties:
+  <<: (( merge ))
+  elasticsearch:
+    host: (( jobs.api.networks.default.static_ips.[0] ))
+    cluster_name: logsearch-cluster
+    drain: true
+    indices:
+      ttl_interval: "5m"  # We want documents from test runs to be cleaned up frequently
+    exec:
+      environment:
+        ES_HEAP_SIZE: 256M
+  redis:
+    host: (( jobs.queue.networks.default.static_ips.[0] ))

@@ -1,0 +1,126 @@
+meta:
+  environment: logsearch-warden
+
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu
+    version: 24
+
+update:
+  canaries: 1
+  max_in_flight: 50
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
+  serial: true
+
+compilation:
+  cloud_properties:
+    name: random
+
+resource_pools:
+  - name: common
+    cloud_properties:
+      name: random
+
+  - name: elasticsearch
+    cloud_properties:
+      name: random
+
+jobs:
+- name: api
+  instances: 1
+  networks:
+  - name: default
+    static_ips: (( static_ips(0) ))
+
+- name: ingestor
+  instances: 1
+  networks:
+  - name: default
+    static_ips: (( static_ips(1) ))
+
+- name: queue
+  instances: 1
+  networks:
+  - name: default
+    static_ips: (( static_ips(2) ))
+
+- name: log_parser
+  instances: 1
+
+- name: elasticsearch_persistent
+  instances: 1
+  persistent_disk: 1024
+  networks:
+  - name: default
+    static_ips: (( static_ips(3) ))
+
+networks:
+- name: default
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.2.0/30
+    reserved:
+    - 10.244.2.1
+    static:
+    - 10.244.2.2
+  - cloud_properties:
+      name: random
+    range: 10.244.2.4/30
+    reserved:
+    - 10.244.2.5
+    static:
+    - 10.244.2.6
+  - cloud_properties:
+      name: random
+    range: 10.244.2.8/30
+    reserved:
+    - 10.244.2.9
+    static:
+    - 10.244.2.10
+  - cloud_properties:
+      name: random
+    range: 10.244.2.12/30
+    reserved:
+    - 10.244.2.13
+    static:
+    - 10.244.2.14
+  - cloud_properties:
+      name: random
+    range: 10.244.2.16/30
+    reserved:
+    - 10.244.2.17
+    static:
+    - 10.244.2.18
+
+  # Bonus double-sized network required due to BOSH oddity
+  - cloud_properties:
+      name: random
+    range: 10.244.2.20/30
+    reserved:
+    - 10.244.2.21
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.2.24/30
+    reserved:
+    - 10.244.2.25
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.2.28/30
+    reserved:
+    - 10.244.2.29
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.2.32/30
+    reserved:
+    - 10.244.2.33
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.2.36/30
+    reserved:
+    - 10.244.2.37
+    static: []

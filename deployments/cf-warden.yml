@@ -1,0 +1,25 @@
+---
+name: cf-warden
+director_uuid: current
+releases:
+- name: cf
+  version: 192
+  git: https://github.com/cloudfoundry/cf-release.git
+
+stemcells:
+- name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+  version: 389
+
+templates:
+- cf-release/cf-deployment.yml
+- cf-release/cf-jobs.yml
+- cf-release/cf-properties.yml
+- cf-release/cf-infrastructure-warden.yml
+- cf-release/cf-minimal-dev.yml
+- cf-syslog.yml
+- update-parallel.yml
+
+meta:
+  syslog_daemon_config:
+    address: 10.244.2.6
+    port: 5515
