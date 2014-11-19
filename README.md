@@ -1,6 +1,6 @@
 logsearch-boshworkspace
 =======================
-The fastest way to deploy [logsearch](http://www.logsearch.io) in combination with [Cloud Foundry](http://www.cloudfoundry.org) onto [bosh-lite](https://github.com/cloudfoundry/bosh-lite).
+The fastest way to deploy [Logsearch](http://www.logsearch.io) in combination with [Cloud Foundry](http://www.cloudfoundry.org) onto [bosh-lite](https://github.com/cloudfoundry/bosh-lite).
 
 ### Preparation
 To get started you will need a running bosh-lite.
@@ -28,3 +28,5 @@ bosh prepare deployment
 bosh deploy
 ```
 
+### Play time
+Now you can browse to the Kibana dashboard [here](http://10.244.2.2/_plugin/kibana/index.html#/dashboard/file/logstash.json)
