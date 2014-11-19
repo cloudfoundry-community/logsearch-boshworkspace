@@ -13,7 +13,7 @@ GEM
       ruby-atmos-pure (~> 1.0.5)
     bosh-template (1.2768.0)
       semi_semantic (~> 1.1.0)
-    bosh-workspace (0.8.3)
+    bosh-workspace (0.8.4)
       bosh_cli (>= 1.2682.0)
       bosh_common (>= 1.2682.0)
       git (~> 1.2.6)
@@ -49,7 +49,7 @@ GEM
       fog-core (~> 1.22)
       fog-json
       inflecto
-    fog-core (1.24.0)
+    fog-core (1.25.0)
       builder
       excon (~> 0.38)
       formatador (~> 0.2)

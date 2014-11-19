@@ -4,6 +4,7 @@ director_uuid: current
 releases:
 - name: logsearch
   version: 17
+  ref: v17.1
   git: https://github.com/swisscom/bosh-workspace.git
 
 stemcells:
