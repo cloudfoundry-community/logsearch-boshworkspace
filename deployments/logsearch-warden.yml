@@ -16,5 +16,6 @@ templates:
 - logsearch/jobs.yml
 - logsearch/properties.yml
 - logsearch/infrastructure-warden.yml
+- logsearch/filters.yml
 
 meta: {}
