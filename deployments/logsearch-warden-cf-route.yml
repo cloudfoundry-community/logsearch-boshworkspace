@@ -21,4 +21,10 @@ templates:
 - logsearch/infrastructure-warden.yml
 - logsearch/filters.yml
 
-meta: {}
+meta:
+  cf:
+    domain: 10.244.0.34.xip.io
+    nats_servers:
+      - host: 10.244.0.6:4222
+        user: nats
+        password: c1oudc0w

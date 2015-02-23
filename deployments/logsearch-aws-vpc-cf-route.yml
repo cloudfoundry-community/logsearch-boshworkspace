@@ -29,3 +29,9 @@ meta:
       subnet_id: SUBNET_ID
       az: us-west-2a
   security_groups: [CLOUDFOUNDRY_SG]
+  cf:
+    domain: PUBLICIP.xip.io
+    nats_servers:
+      - host: 10.10.3.6:4222
+        user: nats
+        password: c1oudc0w
