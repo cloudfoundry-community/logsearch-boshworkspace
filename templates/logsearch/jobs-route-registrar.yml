@@ -3,6 +3,9 @@ jobs:
   templates:
   - name: route-registrar
     release: route-registrar
+  networks:
+  - name: default
+    static_ips: (( merge ))
   properties:
     route_registrar:
       external_host: logs.52.10.176.17.xip.io

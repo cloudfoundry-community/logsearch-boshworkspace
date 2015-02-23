@@ -18,6 +18,7 @@ jobs:
   - name: default
     static_ips: (( static_ips(0) ))
   properties:
+    <<: (( merge ))
     elasticsearch:
       node:
         allow_data: false
