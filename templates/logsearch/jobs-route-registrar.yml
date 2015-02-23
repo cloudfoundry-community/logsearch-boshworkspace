@@ -1,0 +1,16 @@
+jobs:
+- name: api
+  templates:
+  - name: route-registrar
+    release: route-registrar
+  properties:
+    route_registrar:
+      external_host: logs.52.10.176.17.xip.io
+      external_ip: (( jobs.api.networks.default.static_ips.[0] ))
+      port: 5601
+      message_bus_servers:
+      - host: 10.10.3.6:4222
+        user: nats
+        password: c1oudc0w
+      health_checker:
+        name: warden-test
