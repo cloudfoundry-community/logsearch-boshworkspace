@@ -1,0 +1,84 @@
+meta:
+  environment: logsearch-aws-vpc
+
+  stemcell:
+    name: bosh-aws-xen-ubuntu-trusty-go_agent
+    version: latest
+
+  security_groups: (( merge ))
+  dns: [ 10.10.0.2 ]
+  zones:
+    z1:
+      ipmask: (( merge ))
+      subnet_id: (( merge ))
+      az: (( merge ))
+
+update:
+  canaries: 1
+  max_in_flight: 50
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
+  serial: true
+
+compilation:
+  cloud_properties:
+    instance_type: c1.medium
+    availability_zone: (( meta.zones.z1.az ))
+
+resource_pools:
+  - name: common
+    cloud_properties:
+      instance_type: m1.small
+      availability_zone: (( meta.zones.z1.az ))
+
+  - name: elasticsearch
+    cloud_properties:
+      instance_type: m1.small
+      availability_zone: (( meta.zones.z1.az ))
+
+jobs:
+- name: api
+  instances: 1
+  networks:
+  - name: default
+    static_ips: (( static_ips(0) ))
+
+- name: ingestor
+  instances: 1
+  networks:
+  - name: default
+    static_ips: (( static_ips(1) ))
+
+- name: queue
+  instances: 1
+  networks:
+  - name: default
+    static_ips: (( static_ips(2) ))
+
+- name: log_parser
+  instances: 1
+
+- name: elasticsearch_persistent
+  instances: 1
+  persistent_disk: 10240
+  networks:
+  - name: default
+    static_ips: (( static_ips(3) ))
+
+
+networks:
+  - name: default
+    type: manual
+    subnets:
+      - range: (( meta.zones.z1.ipmask ".0/24" ))
+        name: default_unused
+        reserved:
+          - (( meta.zones.z1.ipmask ".2 - " meta.zones.z1.ipmask ".5" ))
+        static:
+          - (( meta.zones.z1.ipmask ".6 - " meta.zones.z1.ipmask ".50" ))
+        gateway: (( meta.zones.z1.ipmask ".1" ))
+        dns: (( meta.dns ))
+        cloud_properties:
+          security_groups: (( meta.security_groups ))
+          subnet: (( meta.zones.z1.subnet_id ))
+          availability_zone: (( meta.zones.z1.az ))
