@@ -3,9 +3,8 @@ name: logsearch-warden
 director_uuid: current
 releases:
 - name: logsearch
-  version: 17
-  ref: v17.1
-  git: https://github.com/swisscom/bosh-workspace.git
+  version: 18
+  git: https://github.com/logsearch/logsearch-boshrelease.git
 
 stemcells:
 - name: bosh-warden-boshlite-ubuntu-trusty-go_agent
