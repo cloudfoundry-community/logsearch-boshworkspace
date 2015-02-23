@@ -1,0 +1,30 @@
+---
+name: logsearch-warden-cf-router
+director_uuid: current
+releases:
+- name: logsearch
+  version: 18
+  git: https://github.com/logsearch/logsearch-boshrelease.git
+- name: route-registrar
+  version: latest
+  git: https://github.com/cloudfoundry-community/route-registrar-boshrelease.git
+
+stemcells:
+- name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+  version: 389
+
+templates:
+- logsearch/deployment.yml
+- logsearch/jobs.yml
+- logsearch/jobs-route-registrar.yml
+- logsearch/properties.yml
+- logsearch/infrastructure-warden.yml
+- logsearch/filters.yml
+
+meta:
+  cf:
+    domain: 10.244.0.34.xip.io
+    nats_servers:
+      - host: 10.244.0.6:4222
+        user: nats
+        password: c1oudc0w

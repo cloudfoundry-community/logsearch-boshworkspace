@@ -1,0 +1,37 @@
+---
+name: logsearch-aws-vpc
+director_uuid: current
+releases:
+- name: logsearch
+  version: 18
+  git: https://github.com/logsearch/logsearch-boshrelease.git
+- name: route-registrar
+  version: latest
+  git: https://github.com/cloudfoundry-community/route-registrar-boshrelease.git
+
+stemcells:
+- name: bosh-aws-xen-ubuntu-trusty-go_agent
+  version: 2778
+
+templates:
+- logsearch/deployment.yml
+- logsearch/jobs.yml
+- logsearch/jobs-route-registrar.yml
+- logsearch/properties.yml
+- logsearch/infrastructure-aws-vpc.yml
+- logsearch/filters.yml
+
+meta:
+  environment: logsearch-aws-vpc
+  zones:
+    z1:
+      ipmask: 10.10.6
+      subnet_id: SUBNET_ID
+      az: us-west-2a
+  security_groups: [CLOUDFOUNDRY_SG]
+  cf:
+    domain: PUBLICIP.xip.io
+    nats_servers:
+      - host: 10.10.3.6:4222
+        user: nats
+        password: c1oudc0w

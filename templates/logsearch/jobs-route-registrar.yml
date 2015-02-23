@@ -1,0 +1,21 @@
+meta:
+  cf:
+    domain: (( merge ))
+    nats_servers: (( merge ))
+
+jobs:
+- name: api
+  templates:
+  - name: route-registrar
+    release: route-registrar
+  networks:
+  - name: default
+    static_ips: (( merge ))
+  properties:
+    route_registrar:
+      external_host: (( "logs." meta.cf.domain ))
+      external_ip: (( jobs.api.networks.default.static_ips.[0] ))
+      port: 5601
+      message_bus_servers: (( meta.cf.nats_servers ))
+      health_checker:
+        name: warden-test

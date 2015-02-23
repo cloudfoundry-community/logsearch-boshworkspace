@@ -2,22 +2,23 @@ name: (( merge ))
 
 jobs:
 - name: api
-  release: logsearch
-  templates: 
+  templates:
+  - <<: (( merge ))
   - name: elasticsearch
+    release: logsearch
   - name: api
-  - name: collectd
+    release: logsearch
+  - name: kibana
+    release: logsearch
   update:
     serial: true
   instances: (( merge ))
   resource_pool: common
   networks:
   - name: default
-    static_ips: ~
+    static_ips: (( static_ips(0) ))
   properties:
-    collectd:
-      python_elasticsearch:
-        enabled: true
+    <<: (( merge ))
     elasticsearch:
       node:
         allow_data: false
@@ -33,7 +34,6 @@ jobs:
 - name: ingestor
   release: logsearch
   templates:
-  - name: collectd
   - name: ingestor_lumberjack
   - name: ingestor_syslog
   - name: ingestor_relp
@@ -46,22 +46,16 @@ jobs:
 - name: queue
   release: logsearch
   templates:
-  - name: collectd
   - name: queue
   instances: (( merge ))
   resource_pool: common
   networks:
   - name: default
     static_ips: ~
-  properties:
-    collectd:
-      python_redis:
-        enabled: true
 
 - name: log_parser
   release: logsearch
   templates:
-  - name: collectd
   - name: log_parser
   instances: (( merge ))
   resource_pool: common
@@ -73,7 +67,6 @@ jobs:
   release: logsearch
   templates:
   - name: elasticsearch
-  - name: collectd
   update:
     serial: true
   instances: (( merge ))
@@ -83,9 +76,6 @@ jobs:
     static_ips: ~
   persistent_disk: (( merge ))
   properties:
-    collectd:
-      python_elasticsearch:
-        enabled: true
     elasticsearch:
       node:
         allow_master: false
