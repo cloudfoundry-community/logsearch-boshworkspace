@@ -1,7 +1,8 @@
 namespace :filters do
   desc "Update logsearch filters"
-  # task update: [:clone_or_update_repos, :install_deps, :build_and_test] do
-  task :update do
+  task update: [:clone_or_update_repos, :install_deps, :build_and_test, :update_templates]
+
+  task :update_templates do
     template = <<-EOF.gsub(/      /, '')
       properties:
         logstash_parser:
@@ -19,6 +20,7 @@ namespace :filters do
           Dir.chdir(filter) { sh 'git pull origin master' }
         else
           sh "git clone https://github.com/logsearch/#{filter}"
+          sh "cd #{filter}; git submodule update --init"
         end
       end
     end
@@ -37,7 +39,7 @@ namespace :filters do
       Dir.chdir "tmp/#{filter}" do
         Bundler.with_clean_env { yield }
       end
-    end    
+    end
   end
 
   def filters
