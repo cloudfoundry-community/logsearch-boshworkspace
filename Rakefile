@@ -17,10 +17,10 @@ namespace :plugins do
     FileUtils.mkdir_p('plugins')
     Dir.chdir 'plugins' do
       plugins.each do |plugin_name, plugin_git|
+        git_repo, git_ref = plugin_git[:git], plugin_git[:ref]
         if File.exists?(plugin_name)
-          Dir.chdir(plugin_name) { sh 'git pull origin master' }
+          Dir.chdir(plugin_name) { sh "git pull origin #{git_ref}" }
         else
-          git_repo, git_ref = plugin_git[:git], plugin_git[:ref]
           sh "git clone -b #{git_ref} #{git_repo} #{plugin_name}"
           sh "cd #{plugin_name}; git submodule update --init"
         end
