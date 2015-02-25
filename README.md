@@ -68,6 +68,12 @@ Edit `deployments/my-logsearch.yml` with your:
 -	Network subnet (populate the subnet ID into `meta.zones.z1.subnet_id` and update other `meta.zones.z1.*` fields as necessary)
 -	Security group (use the same security groups being used for Cloud Foundry and populate into `meta.security_groups`\)
 
+```
+bosh deployment my-logsearch
+bosh prepare deployment
+bosh deploy
+```
+
 ### Update Cloud Foundry with Syslog enabled
 
 You can now re-deploy Cloud Foundry with `syslog` emitting to your Logsearch Add the following to your Cloud Foundry deployment manifest.
