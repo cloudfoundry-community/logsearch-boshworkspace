@@ -1,53 +1,70 @@
-namespace :filters do
-  desc "Update logsearch filters"
+namespace :plugins do
+  desc "Update logsearch plugins"
   task update: [:clone_or_update_repos, :install_deps, :build_and_test, :update_templates]
 
   task :update_templates do
     template = <<-EOF.gsub(/      /, '')
       properties:
         logstash_parser:
-          filters: |
+          plugins: |
     EOF
     template += '      <%=' # prevent bosh_cli from stripping '<%' http://git.io/OKyMtw
     template += filter_config.gsub(/^/, '      ')
-    IO.write('templates/logsearch/filters.yml', template)
+    IO.write('templates/logsearch/plugins.yml', template)
   end
 
   task :clone_or_update_repos do
-    Dir.chdir 'tmp' do
-      filters.each do |filter|
-        if File.exists?(filter)
-          Dir.chdir(filter) { sh 'git pull origin master' }
+    FileUtils.mkdir_p('plugins')
+    Dir.chdir 'plugins' do
+      plugins.each do |plugin_name, plugin_git|
+        git_repo, git_ref = plugin_git[:git], plugin_git[:ref]
+        if File.exists?(plugin_name)
+          Dir.chdir(plugin_name) { sh "git pull origin #{git_ref}" }
         else
-          sh "git clone https://github.com/logsearch/#{filter}"
-          sh "cd #{filter}; git submodule update --init"
+          sh "git clone -b #{git_ref} #{git_repo} #{plugin_name}"
+          sh "cd #{plugin_name}; git submodule update --init"
         end
       end
     end
   end
 
   task :install_deps do
-    in_filter_dirs { sh './bin/install_deps.sh' }
+    in_plugin_dirs { sh './bin/install_deps.sh' }
   end
 
   task :build_and_test do
-    in_filter_dirs { sh './bin/build-and-test.sh' }
+    in_plugin_dirs { sh './bin/build-and-test.sh' }
   end
 
-  def in_filter_dirs
-    filters.each do |filter|
-      Dir.chdir "tmp/#{filter}" do
+  def plugins
+    {
+      'logsearch-filters-common' => {
+        git: 'https://github.com/logsearch/logsearch-filters-common',
+        ref: 'master'
+      },
+      'logsearch-filters-cf' => {
+        git: 'https://github.com/logsearch/logsearch-filters-cf',
+        ref: 'master'
+      },
+      'logsearch-for-websites' => {
+        git: 'https://github.com/drnic/logsearch-for-websites',
+        ref: 'consistent_api'
+      }
+    }
+  end
+
+  def in_plugin_dirs
+    plugins.each do |plugin_name, plugin_git|
+      Dir.chdir "plugins/#{plugin_name}" do
         Bundler.with_clean_env { yield }
       end
     end
   end
 
-  def filters
-    %w(logsearch-filters-common logsearch-filters-cf)
-  end
-
   def filter_config
-    filters.map { |f| "tmp/#{f}/target/**/*.conf" }.map do |files|
+    plugins.map do |plugin_name|
+      "plugins/#{plugin_name}/target/**/*.conf"
+    end.map do |files|
       Dir[files].map { |file| puts file; IO.read(file) }
     end.flatten.join('')
   end
