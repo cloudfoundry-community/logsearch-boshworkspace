@@ -51,18 +51,22 @@ bosh prepare deployment
 bosh deploy
 ```
 
+Since the deployment characteristics of Cloud Foundry on bosh-lite/warden are well known (static IPs, etc) you do not need to modify the `deployments/logsearch-warden.yml` file for this to work.
+
 ### Deploy Logsearch to AWS VPC
 
 Copy the `logsearch-aws-vpc.yml` or `logsearch-aws-vpc-cf-route.yml` to a new file that you will edit:
 
 ```
-cp deployments/logsearch-aws-vpc-cf-route.yml \
-   deployments/my-logsearch.yml
+cp deployments/logsearch-aws-vpc-cf-route.yml deployments/my-logsearch.yml
 ```
 
 Edit `deployments/my-logsearch.yml` with your:
 
--	director UUID (`bosh status --uuid`\)
+-	director UUID (run `bosh status --uuid` and populate into `director_uuid`\)
+-	NATS host (run `bosh vms --dns` and populate into `meta.cf.nats_servers.host`\)
+-	Network subnet (populate the subnet ID into `meta.zones.z1.subnet_id` and update other `meta.zones.z1.*` fields as necessary)
+-	Security group (use the same security groups being used for Cloud Foundry and populate into `meta.security_groups`\)
 
 ### Update Cloud Foundry with Syslog enabled
 
