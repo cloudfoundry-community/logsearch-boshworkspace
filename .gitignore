@@ -2,4 +2,5 @@
 .deployments*
 .releases*
 .stubs*
-
+plugins
+tmp
