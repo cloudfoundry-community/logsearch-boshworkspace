@@ -19,21 +19,21 @@ bundle install
 Filters
 -------
 
-The logsearch community has created some pre-built filters. They are distributed as plugin repositories (such as https://github.com/logsearch/logsearch-filters-common).
+The logsearch community has created some pre-built filters. They are distributed as addon repositories (such as https://github.com/logsearch/logsearch-filters-cf).
 
-A `rake` task is provided to fetch a subset of these plugin filters and update the `templates/` to include the logstash filters.
-
-```
-rake plugins:update
-```
-
-Currently some plugins test suites fail - you can continue with:
+A `rake` task is provided to fetch a subset of these addon filters and update the `templates/` to include the logstash filters.
 
 ```
-rake plugins:update_templates
+rake addons:update
 ```
 
-Open issues for failing test suites for plugins:
+Currently some addon's test suites fail - you can continue with:
+
+```
+rake addons:update_templates
+```
+
+Open issues for failing test suites for addons:
 
 -	[![cf](https://github-shields.cfapps.io/github/logsearch/logsearch-filters-cf/issues/11.svg)](https://github-shields.cfapps.io/github/logsearch/logsearch-filters-cf/issues/11)
 -	[![website](https://github-shields.cfapps.io/github/logsearch/logsearch-for-websites/issues/3.svg)](https://github-shields.cfapps.io/github/logsearch/logsearch-for-websites/issues/3)
