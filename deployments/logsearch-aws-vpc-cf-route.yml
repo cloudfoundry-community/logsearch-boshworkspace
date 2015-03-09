@@ -19,7 +19,7 @@ templates:
 - logsearch/jobs-route-registrar.yml
 - logsearch/properties.yml
 - logsearch/infrastructure-aws-vpc.yml
-- logsearch/filters.yml
+- logsearch/logstash-filters.yml
 
 meta:
   environment: logsearch-aws-vpc
