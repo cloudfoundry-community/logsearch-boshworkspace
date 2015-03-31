@@ -3,7 +3,6 @@ name: (( merge ))
 jobs:
 - name: api
   templates:
-  - <<: (( merge ))
   - name: elasticsearch
     release: logsearch
   - name: api

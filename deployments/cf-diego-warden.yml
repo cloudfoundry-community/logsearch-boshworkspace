@@ -17,6 +17,7 @@ templates:
 - cf-release/cf-lamb.yml
 - cf-release/cf-infrastructure-warden.yml
 - cf-release/cf-minimal-dev.yml
+- diego-release/enable_diego_docker_in_cc.yml
 - cf-syslog.yml
 - update-parallel.yml
 

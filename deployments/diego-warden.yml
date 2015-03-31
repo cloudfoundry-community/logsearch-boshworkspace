@@ -1,7 +1,10 @@
 ---
-name: cf-warden
+name: diego-warden
 director_uuid: current
 releases:
+- name: diego
+  version: 0.1057.0
+  git: https://github.com/cloudfoundry-incubator/diego-release.git
 - name: cf
   version: 205
   git: https://github.com/cloudfoundry/cf-release.git
@@ -11,13 +14,13 @@ stemcells:
   version: 389
 
 templates:
-- cf-release/cf-deployment.yml
-- cf-release/cf-jobs.yml
+- diego-release/deployment.yml
+- diego-release/jobs.yml
+- diego-release/infrastructure-bosh-lite.yml
+- diego-release/cf-shared.yml
+- diego-release/diego-cf-stub.yml
 - cf-release/cf-properties.yml
-- cf-release/cf-lamb.yml
 - cf-release/cf-infrastructure-warden.yml
-- cf-release/cf-minimal-dev.yml
-- cf-syslog.yml
 - update-parallel.yml
 
 meta:
