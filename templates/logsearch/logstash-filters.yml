@@ -2,7 +2,7 @@ properties:
   logstash_parser:
     filters: |
       <%=      # Parse Cloud Foundry logs from loggregator (syslog)
-      # see https://github.      com/cloudfoundry/loggregator/blob/master/src/loggregator/sinks/syslogwriter/syslog_writer.go#L156
+      # see https://github.com/cloudfoundry/loggregator/blob/master/src/loggregator/sinks/syslogwriter/syslog_writer.go#L156
       
       if [@type] in ["syslog", "relp"] and [syslog_program] == "doppler" {
         # Parse Cloud Foundry logs from doppler (via https://github.com/SpringerPE/firehose-to-syslog)
@@ -29,8 +29,8 @@ properties:
             if ('RTR' in [source_type]) {
                 grok {
                     match => {
-                        'msg' => '%{HOSTNAME:hostname} - \[(?<time>%{MONTHDAY}/%{MONTHNUM}/%{YEAR}:%{TIME} %{INT})\] \"%{WORD:verb} %{URIPATHPARAM:path} %{PROG:http_spec}\" %{BASE10NUM:status:int} %{BASE10NUM:body_bytes_sent:int} \"%{GREEDYDATA:referer}\" \"%{GREEDYDATA:http_user_agent}\" %{HOSTPORT} x_forwarded_for:\"%{GREEDYDATA:x_forwarded_for}\" vcap_request_id:%{NOTSPACE:vcap_request_id} response_time:%{NUMBER:response_time:float} app_id:%{NOTSPACE}'
-                        overwrite => [ "time" ]
+                        'msg' => '%{HOSTNAME:hostname} - \[(?<time>%{MONTHDAY}/%{MONTHNUM}/%{YEAR}:%{TIME} %{INT})\] \"%{WORD:verb} %{URIPATHPARAM:path} %{PROG:http_spec}\" %{BASE10NUM:status:int} %{BASE10NUM:body_bytes_sent:int} \"%{GREEDYDATA:referer}\" \"%{GREEDYDATA:http_user_agent}\" %{HOSTPORT} x_forwarded_for:\"%{GREEDYDATA:x_forwarded_for}\" vcap_request_id:%{NOTSPACE:vcap_request_id} response_time:%{NUMBER:response_time:float} app_id:%{NOTSPACE}' 
+                         overwrite => [ "time" ]
                         'tag_on_failure' => [ 'fail/cloudfoundry/doppler/RTR' ]
                     }
                 }
@@ -58,6 +58,25 @@ properties:
                         remove => [ "msg" ]
                     }
                 }
+            }
+        
+            #EXPERIMENTAL: Decorate log event with app name / space / org metadata
+            translate {
+                #Lookup using: cf curl "/v2/apps/$APP_UUID?inline-relations-depth=2" | jq --compact-output '. | { cf_app_id: .metadata.guid,       cf_app_name: .entity.name , cf_space_id: .entity.space.metadata.guid , cf_space_name: .entity.space.entity.name , cf_org_id:       .entity.space.entity.organization.metadata.guid , cf_org_name: .entity.space.entity.organization.entity.name }'
+                dictionary => [ 
+                    'ec2d33f6-fd1c-49a5-9a90-031454d1f1ac', '{"cf_app_id":"ec2d33f6-fd1c-49a5-9a90-      031454d1f1ac","cf_app_name":"myappname","cf_space_id":"ec2d33f6-fd1c-49a5-9a90-      03145444444","cf_space_name":"myspacename","cf_org_id":"ec2d33f6-fd1c-49a5-9a90-      031454d555555","cf_org_name":"myorgname"}',
+                    'afc7d161-b5d5-44f2-a2c8-63870ff8f2db', '{"cf_app_id":"afc7d161-b5d5-44f2-a2c8-      63870ff8f2db","cf_app_name":"goexample","cf_space_id":"b1aa14ec-eaae-4e2c-804d-      08b2ae75a2bf","cf_space_name":"test","cf_org_id":"cbb84726-b20f-424f-b420-e3a5db9419fd","cf_org_name":"system"}',
+                    'abfc9a95-d20c-44bb-9771-4aba27856843', '{"cf_app_id":"abfc9a95-d20c-44bb-9771-4aba27856843","cf_app_name":"cf-      env","cf_space_id":"b1aa14ec-eaae-4e2c-804d-08b2ae75a2bf","cf_space_name":"test","cf_org_id":"cbb84726-b20f-424f-b420-      e3a5db9419fd","cf_org_name":"system"}',
+                    'e6f78bd9-ca15-42d3-894e-d2b8b06e5e83', '{"cf_app_id":"e6f78bd9-ca15-42d3-894e-      d2b8b06e5e83","cf_app_name":"discourse","cf_space_id":"b1aa14ec-eaae-4e2c-804d-      08b2ae75a2bf","cf_space_name":"test","cf_org_id":"cbb84726-b20f-424f-b420-e3a5db9419fd","cf_org_name":"system"}'
+                
+                ]
+                fallback => '{"cf_app_id_unknown":"00000000-0000-0000-0000-000000000000","cf_app_name":"UNKNOWN","cf_space_id":"00000000-0000      -0000-0000-000000000000","cf_space_name":"UNKNOWN","cf_org_id":"00000000-0000-0000-0000-      000000000000","cf_org_name":"UNKNOWN"}'
+                field => "cf_app_id"
+                destination => "cf_app_metadata_raw"
+            }
+            json {
+                source => 'cf_app_metadata_raw'
+                remove_field => [ "cf_app_metadata_raw", "cf_app_id_unknown" ]
             }
         
             #Ensure that we always have an event_type, in prep for adding metrics
@@ -89,7 +108,7 @@ properties:
             
       } else if [@type] in ["syslog", "relp"] and [@source.host] == "loggregator" {
         # Parse Cloud Foundry logs from loggregator (syslog)
-        # see https://github.      com/cloudfoundry/loggregator/blob/master/src/loggregator/sinks/syslogwriter/syslog_writer.go#L156
+        # see https://github.com/cloudfoundry/loggregator/blob/master/src/loggregator/sinks/syslogwriter/syslog_writer.go#L156
         
         grok {
             match => { "syslog_procid" => "\[(?<log_source>[^/\]]+)(?:/(?<log_source_id>[^\]]+))?\]" }
@@ -195,4 +214,4 @@ properties:
         }
       
       }
-      
+
