@@ -1,13 +1,10 @@
 ---
 name: logsearch-aws-vpc
-director_uuid: 0229c47f-e28c-470b-adf8-653e4cf00978
+director_uuid: current
 releases:
 - name: logsearch
-  version: latest
+  version: 18
   git: https://github.com/logsearch/logsearch-boshrelease.git
-- name: logsearch-for-cloudfoundry
-  version: latest
-  git: https://github.com/logsearch/logsearch-for-cloudfoundry.git
 - name: route-registrar
   version: latest
   git: https://github.com/cloudfoundry-community/route-registrar-boshrelease.git
@@ -28,13 +25,13 @@ meta:
   environment: logsearch-aws-vpc
   zones:
     z1:
-      ipmask: 10.10.5
-      subnet_id: subnet-93d332ca
-      az: us-west-1b
-  security_groups: [cf-0-vpc-aa77b9cf]
+      ipmask: 10.10.6
+      subnet_id: SUBNET_ID
+      az: us-west-2a
+  security_groups: [CLOUDFOUNDRY_SG]
   cf:
-    domain: 54.183.203.97.xip.io
+    domain: PUBLICIP.xip.io
     nats_servers:
-      - host: 10.10.3.10:4222
+      - host: 10.10.3.6:4222
         user: nats
         password: c1oudc0w
