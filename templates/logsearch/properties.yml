@@ -1,8 +1,7 @@
 meta:
   skip-ssl-validation: (( merge || false ))
   ingestor_cloudfoundry-firehose:
-    uaa-endpoint: (( merge ))
-    doppler-endpoint: (( merge ))
+    cf-domain: (( merge ))
     firehose-user: (( merge || "admin" ))
     firehose-password: (( merge ))
   api_host_header: (( merge ))
@@ -12,11 +11,8 @@ meta:
 
 properties: 
   ingestor_cloudfoundry-firehose:
-    debug: true
-    # Typo can be removed when fixed upstream
-    uua-endpoint: (( meta.ingestor_cloudfoundry-firehose.uaa-endpoint ))
-    uaa-endpoint: (( meta.ingestor_cloudfoundry-firehose.uaa-endpoint ))
-    doppler-endpoint: (( meta.ingestor_cloudfoundry-firehose.doppler-endpoint ))
+    debug: false #WARING: When true, logs only written to stdout and are NOT shipped to syslog
+    cf-domain: (( meta.ingestor_cloudfoundry-firehose.cf-domain ))
     skip-ssl-validation: (( meta.skip-ssl-validation ))
     firehose-user: (( meta.ingestor_cloudfoundry-firehose.firehose-user ))
     firehose-password: (( meta.ingestor_cloudfoundry-firehose.firehose-password ))
@@ -31,7 +27,7 @@ properties:
     elasticsearch: 127.0.0.1:9200
     port: 5601 
   logstash_parser:
-    debug: true
+    debug: false
     filters: ~
   logstash_ingestor:
     debug: true
