@@ -30,7 +30,7 @@ namespace :addons do
   def addons
     {
       'logsearch-for-cloudfoundry' => {
-        logstash_filters: 'https://raw.githubusercontent.com/logsearch/logsearch-filters-cf/new-logsearch-addon-structure/target/logstash-filters-default.conf'
+        logstash_filters: 'https://raw.githubusercontent.com/logsearch/logsearch-for-cloudfoundry/master/target/logstash-filters-default.conf'
       } # ,
       # 'logsearch-for-websites' => {
       #    logstash_filters: 'https://raw.githubusercontent.com/logsearch/logsearch-for-websites/v0.5/target/logstash-filters-default.conf'
