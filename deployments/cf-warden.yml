@@ -3,7 +3,7 @@ name: cf-warden
 director_uuid: current
 releases:
 - name: cf
-  version: 192
+  version: 207
   git: https://github.com/cloudfoundry/cf-release.git
 
 stemcells:
@@ -14,6 +14,7 @@ templates:
 - cf-release/cf-deployment.yml
 - cf-release/cf-jobs.yml
 - cf-release/cf-properties.yml
+- cf-release/cf-lamb.yml
 - cf-release/cf-infrastructure-warden.yml
 - cf-release/cf-minimal-dev.yml
 - cf-syslog.yml
