@@ -3,7 +3,7 @@ name: logsearch-warden
 director_uuid: current
 releases:
 - name: logsearch
-  version: 18+dev.1
+  version: 19
   git: https://github.com/logsearch/logsearch-boshrelease.git
 - name: logsearch-for-cloudfoundry
   version: latest
