@@ -3,8 +3,12 @@ name: logsearch-warden
 director_uuid: current
 releases:
 - name: logsearch
-  version: 18
+  version: 18+dev.1
   git: https://github.com/logsearch/logsearch-boshrelease.git
+- name: logsearch-for-cloudfoundry
+  version: latest
+  git: https://github.com/logsearch/logsearch-for-cloudfoundry.git
+  path: logsearch-for-cloudfoundry-boshrelease
 
 stemcells:
 - name: bosh-warden-boshlite-ubuntu-trusty-go_agent
@@ -17,4 +21,10 @@ templates:
 - logsearch/infrastructure-warden.yml
 - logsearch/logstash-filters.yml
 
-meta: {}
+meta:
+  api_host_header: c1oudc0w
+  skip-ssl-validation: true
+  ingestor_cloudfoundry-firehose:
+    cf-domain: 10.244.0.34.xip.io
+    firehose-password: admin
+  
