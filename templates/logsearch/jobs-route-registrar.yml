@@ -4,6 +4,7 @@ meta:
     nats_servers: (( merge ))
 
 jobs:
+- <<: (( merge ))
 - name: api
   templates:
   - name: route-registrar

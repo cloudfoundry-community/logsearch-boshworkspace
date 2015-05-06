@@ -15,8 +15,8 @@ stemcells:
 
 templates:
 - logsearch/deployment.yml
-- logsearch/jobs.yml
 - logsearch/jobs-route-registrar.yml
+- logsearch/jobs.yml
 - logsearch/properties.yml
 - logsearch/infrastructure-warden.yml
 - logsearch/logstash-filters.yml
