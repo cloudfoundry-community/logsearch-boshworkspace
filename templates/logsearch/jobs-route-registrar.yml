@@ -6,12 +6,16 @@ meta:
 jobs:
 - name: api
   templates:
+  - <<: (( merge ))
   - name: route-registrar
     release: route-registrar
-  networks:
-  - name: default
-    static_ips: (( merge ))
+  networks: (( merge ))
+  resource_pool: (( merge ))
+  persistent_disk: (( merge ))
+  instances: (( merge ))
+  update: (( merge ))
   properties:
+    <<: (( merge ))
     route_registrar:
       external_host: (( "logs." meta.cf.domain ))
       external_ip: (( jobs.api.networks.default.static_ips.[0] ))
@@ -19,3 +23,4 @@ jobs:
       message_bus_servers: (( meta.cf.nats_servers ))
       health_checker:
         name: warden-test
+- <<: (( merge ))

@@ -13,6 +13,15 @@ meta:
       subnet_id: (( merge ))
       az: (( merge ))
 
+  instances:
+    api: (( merge || 1 ))
+    log_parser: (( merge || 1 ))
+    elasticsearch_persistent: (( merge || 1 ))
+
+  instance_types:
+    common: (( merge || "m1.small" ))
+    elasticsearch:  (( merge || "m1.small" ))
+
 update:
   canaries: 1
   max_in_flight: 50
@@ -22,48 +31,50 @@ update:
 
 compilation:
   cloud_properties:
-    instance_type: c1.medium
+    instance_type: (( meta.instance_types.common ))
     availability_zone: (( meta.zones.z1.az ))
 
 resource_pools:
   - name: common
     cloud_properties:
-      instance_type: m1.small
+      instance_type: (( meta.instance_types.common ))
       availability_zone: (( meta.zones.z1.az ))
 
   - name: elasticsearch
     cloud_properties:
-      instance_type: m1.small
+      instance_type: (( meta.instance_types.elasticsearch ))
       availability_zone: (( meta.zones.z1.az ))
 
 jobs:
 - name: api
-  instances: 1
+  instances: (( meta.instances.api ))
+  persistent_disk: 10240
   networks:
   - name: default
-    static_ips: (( static_ips(0) ))
+    static_ips: (( static_ips(0,5) ))
 
 - name: ingestor
-  instances: 1
+  instances: (( meta.instances.ingestor ))
   networks:
   - name: default
-    static_ips: (( static_ips(1) ))
+    static_ips: (( static_ips(1,6) ))
 
 - name: queue
   instances: 1
+  persistent_disk: 1024
   networks:
   - name: default
     static_ips: (( static_ips(2) ))
 
 - name: log_parser
-  instances: 1
+  instances: (( meta.instances.log_parser ))
 
 - name: elasticsearch_persistent
-  instances: 1
+  instances: (( meta.instances.elasticsearch_persistent ))
   persistent_disk: 10240
   networks:
   - name: default
-    static_ips: (( static_ips(3) ))
+    static_ips: (( static_ips(3,4,7,8,9) ))
 
 
 networks:

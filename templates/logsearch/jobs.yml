@@ -3,7 +3,6 @@ name: (( merge ))
 jobs:
 - name: api
   templates:
-  - <<: (( merge ))
   - name: elasticsearch
     release: logsearch
   - name: api
@@ -14,6 +13,7 @@ jobs:
     serial: true
   instances: (( merge ))
   resource_pool: common
+  persistent_disk: (( merge ))
   networks:
   - name: default
     static_ips: (( static_ips(0) ))
@@ -31,23 +31,24 @@ jobs:
       - path: /var/vcap/sys/log/api/nginx.error.log
         type: nginx_error
 
-- name: ingestor
+- name: queue
   release: logsearch
   templates:
-  - name: ingestor_cloudfoundry-firehose
-    release: logsearch-for-cloudfoundry
-  - name: ingestor_syslog
-  - name: ingestor_relp
+  - name: queue
   instances: (( merge ))
+  persistent_disk: (( merge ))
   resource_pool: common
   networks:
   - name: default
     static_ips: ~
 
-- name: queue
+- name: ingestor
   release: logsearch
   templates:
-  - name: queue
+  # - name: ingestor_cloudfoundry-firehose
+  #   release: logsearch-for-cloudfoundry
+  - name: ingestor_syslog
+  - name: ingestor_relp
   instances: (( merge ))
   resource_pool: common
   networks:

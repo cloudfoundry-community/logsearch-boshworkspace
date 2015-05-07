@@ -1,4 +1,5 @@
 meta:
+  debug: (( merge || false ))
   skip-ssl-validation: (( merge || false ))
   ingestor_cloudfoundry-firehose:
     cf-domain: (( merge ))
@@ -6,12 +7,14 @@ meta:
     firehose-password: (( merge ))
   api_host_header: (( merge ))
   logstash_ingestor_syslog:
-    ssl_cert: (( merge ))
-    ssl_key: (( merge ))
+    port:  (( merge || nil ))
+    ssl_cert: (( merge || nil ))
+    ssl_key: (( merge || nil ))
 
 properties: 
   ingestor_cloudfoundry-firehose:
-    debug: false #WARING: When true, logs only written to stdout and are NOT shipped to syslog
+    #WARING: When true, logs only written to stdout and are NOT shipped to syslog
+    debug: (( meta.debug )) 
     cf-domain: (( meta.ingestor_cloudfoundry-firehose.cf-domain ))
     skip-ssl-validation: (( meta.skip-ssl-validation ))
     firehose-user: (( meta.ingestor_cloudfoundry-firehose.firehose-user ))
@@ -27,15 +30,15 @@ properties:
     elasticsearch: 127.0.0.1:9200
     port: 5601 
   logstash_parser:
-    debug: false
+    debug: (( meta.debug ))
     filters: ~
   logstash_ingestor:
-    debug: true
+    debug: (( meta.debug ))
     relp:
       port: 5515
     syslog:
       port: 5514
     syslog_tls:
-      port: 443
+      port: ((  meta.logstash_ingestor_syslog.port ))
       ssl_cert: (( meta.logstash_ingestor_syslog.ssl_cert ))
       ssl_key: (( meta.logstash_ingestor_syslog.ssl_key ))
