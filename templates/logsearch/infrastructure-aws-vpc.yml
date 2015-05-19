@@ -15,6 +15,7 @@ meta:
 
   instances:
     api: (( merge || 1 ))
+    ingestor: (( merge || 1 ))
     log_parser: (( merge || 1 ))
     elasticsearch_persistent: (( merge || 1 ))
 
