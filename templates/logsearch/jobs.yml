@@ -90,10 +90,5 @@ properties:
     host: (( jobs.api.networks.default.static_ips.[0] ))
     cluster_name: logsearch-cluster
     drain: true
-    indices:
-      ttl_interval: "5m"  # We want documents from test runs to be cleaned up frequently
-    exec:
-      environment:
-        ES_HEAP_SIZE: 256M
   redis:
     host: (( jobs.queue.networks.default.static_ips.[0] ))
