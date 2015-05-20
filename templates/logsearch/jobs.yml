@@ -45,8 +45,8 @@ jobs:
 - name: ingestor
   release: logsearch
   templates:
-  # - name: ingestor_cloudfoundry-firehose
-  #   release: logsearch-for-cloudfoundry
+  - name: ingestor_cloudfoundry-firehose
+    release: logsearch-for-cloudfoundry
   - name: ingestor_syslog
   - name: ingestor_relp
   instances: (( merge ))
