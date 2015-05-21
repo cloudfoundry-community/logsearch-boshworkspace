@@ -15,7 +15,7 @@ jobs:
   resource_pool: common
   persistent_disk: (( merge ))
   networks:
-  - name: default
+  - name: ls1
     static_ips: (( static_ips(0) ))
   properties:
     <<: (( merge ))
@@ -39,7 +39,7 @@ jobs:
   persistent_disk: (( merge ))
   resource_pool: common
   networks:
-  - name: default
+  - name: ls1
     static_ips: ~
 
 - name: ingestor
@@ -52,7 +52,7 @@ jobs:
   instances: (( merge ))
   resource_pool: common
   networks:
-  - name: default
+  - name: ls1
     static_ips: ~
 
 - name: log_parser
@@ -62,7 +62,7 @@ jobs:
   instances: (( merge ))
   resource_pool: common
   networks:
-  - name: default
+  - name: ls1
     default: [dns, gateway]
 
 - name: elasticsearch_persistent
@@ -74,7 +74,7 @@ jobs:
   instances: (( merge ))
   resource_pool: elasticsearch
   networks:
-  - name: default
+  - name: ls1
     static_ips: ~
   persistent_disk: (( merge ))
   properties:
@@ -87,8 +87,8 @@ networks: (( merge ))
 properties:
   <<: (( merge ))
   elasticsearch:
-    host: (( jobs.api.networks.default.static_ips.[0] ))
+    host: (( jobs.api.networks.ls1.static_ips.[0] ))
     cluster_name: logsearch-cluster
     drain: true
   redis:
-    host: (( jobs.queue.networks.default.static_ips.[0] ))
+    host: (( jobs.queue.networks.ls1.static_ips.[0] ))

@@ -1,14 +1,18 @@
 ---
 name: logsearch-aws-vpc
-director_uuid: current
+director_uuid: DIRECTOR_UUID
 releases:
 - name: logsearch
-  version: 18
+  version: 19
   git: https://github.com/logsearch/logsearch-boshrelease.git
+- name: logsearch-for-cloudfoundry
+  version: 2
+  git: https://github.com/logsearch/logsearch-for-cloudfoundry.git
+  path: logsearch-for-cloudfoundry-boshrelease
 
 stemcells:
 - name: bosh-aws-xen-ubuntu-trusty-go_agent
-  version: 2778
+  version: 2972
 
 templates:
 - logsearch/deployment.yml
@@ -18,10 +22,30 @@ templates:
 - logsearch/logstash-filters.yml
 
 meta:
-  environment: logsearch-aws-vpc
+  api_host_header: SECRET
+  ingestor_cloudfoundry-firehose:
+    cf-domain: CF_DOMAIN
+    firehose-password: CF_ADMIN_PASS
+
   zones:
-    z1:
-      ipmask: 10.10.6
-      subnet_id: SUBNET_ID
-      az: us-west-2a
-  security_groups: [CLOUDFOUNDRY_SG]
+    z1: us-west-2a
+
+  networks:
+    ls1:
+      dns: [ 10.10.0.2 ]
+      quad: "6"
+      net_id: SUBNET_ID
+      security_groups: 
+      - CLOUDFOUNDRY_SG
+
+  instances:
+    log_parser: 1
+    elasticsearch_persistent: 1
+
+  instance_types:
+    common: c3.large
+    elasticsearch: c3.large
+
+  persistent_disks:
+    queue: 5000 # more then memory of node
+    elasticsearch: 10000

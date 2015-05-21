@@ -1,0 +1,41 @@
+meta:
+  networks:
+    ipmask: (( merge || "10.10" ))
+    dns: (( merge || nil ))
+    security_groups: (( merge || nil ))
+  
+    ls1:
+      quad: (( merge || "1" ))
+      net_id: (( merge ))
+      subnet: (( net_id ))
+      range: (( merge || defaults.ls1.range ))
+      gateway: (( merge || defaults.ls1.gateway ))
+      dns: (( merge || meta.networks.dns ))
+      reserved: (( merge || defaults.ls1.reserved ))
+      static: (( merge || defaults.ls1.static ))
+      security_groups: (( merge || meta.networks.security_groups ))
+
+defaults:
+  ls1:
+    net: (( meta.networks.ipmask "." meta.networks.ls1.quad ))
+    range: (( defaults.ls1.net ".0/24" ))
+    gateway: (( defaults.ls1.net ".1" ))
+    reserved:
+      - (( defaults.ls1.net ".2 - " defaults.ls1.net ".5" ))
+    static:
+      - (( defaults.ls1.net ".6 - " defaults.ls1.net ".50" ))
+
+networks:
+  - name: ls1
+    type: manual
+    subnets:
+      - name: default_unused
+        range: (( meta.networks.ls1.range ))
+        reserved: (( meta.networks.ls1.reserved ))
+        static: (( meta.networks.ls1.static ))
+        gateway: (( meta.networks.ls1.gateway ))
+        dns: (( meta.networks.ls1.dns ))
+        cloud_properties:
+          security_groups: (( meta.networks.ls1.security_groups ))
+          subnet: (( meta.networks.ls1.net_id ))
+          net_id: (( meta.networks.ls1.net_id ))

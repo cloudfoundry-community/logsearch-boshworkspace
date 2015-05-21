@@ -29,19 +29,19 @@ jobs:
 - name: api
   instances: 1
   networks:
-  - name: default
+  - name: ls1
     static_ips: (( static_ips(0) ))
 
 - name: ingestor
   instances: 1
   networks:
-  - name: default
+  - name: ls1
     static_ips: (( static_ips(1) ))
 
 - name: queue
   instances: 1
   networks:
-  - name: default
+  - name: ls1
     static_ips: (( static_ips(2) ))
 
 - name: log_parser
@@ -51,11 +51,11 @@ jobs:
   instances: 1
   persistent_disk: 1024
   networks:
-  - name: default
+  - name: ls1
     static_ips: (( static_ips(3) ))
 
 networks:
-- name: default
+- name: ls1
   subnets:
   - cloud_properties:
       name: random
