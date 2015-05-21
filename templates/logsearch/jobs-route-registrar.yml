@@ -18,7 +18,7 @@ jobs:
     <<: (( merge ))
     route_registrar:
       external_host: (( "logs." meta.cf.domain ))
-      external_ip: (( jobs.api.networks.default.static_ips.[0] ))
+      external_ip: (( jobs.api.networks.ls1.static_ips.[0] ))
       port: 5601
       message_bus_servers: (( meta.cf.nats_servers ))
       health_checker:
