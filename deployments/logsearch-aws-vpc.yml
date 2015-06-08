@@ -6,7 +6,7 @@ releases:
   version: 19
   git: https://github.com/logsearch/logsearch-boshrelease.git
 - name: logsearch-for-cloudfoundry
-  version: 2
+  version: 3
   git: https://github.com/logsearch/logsearch-for-cloudfoundry.git
   path: logsearch-for-cloudfoundry-boshrelease
 
