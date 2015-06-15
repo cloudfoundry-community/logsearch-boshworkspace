@@ -39,8 +39,8 @@ meta:
       - CLOUDFOUNDRY_SG
 
   instances:
-    log_parser: 1
-    elasticsearch_persistent: 1
+    log_parser:               1 # MARKER_FOR_PROVISION
+    elasticsearch_persistent: 2 # MARKER_FOR_PROVISION
 
   instance_types:
     common: c3.large
