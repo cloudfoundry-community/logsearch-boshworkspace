@@ -90,5 +90,7 @@ properties:
     host: (( jobs.api.networks.ls1.static_ips.[0] ))
     cluster_name: logsearch-cluster
     drain: true
+    discovery:
+      minimum_master_nodes:  (( jobs.api.instances ))
   redis:
     host: (( jobs.queue.networks.ls1.static_ips.[0] ))
