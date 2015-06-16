@@ -28,13 +28,13 @@ meta:
     firehose-password: CF_ADMIN_PASS
 
   zones:
-    z1: us-west-2a
+    z1: LS1_SUBNET_AZ
 
   networks:
     ls1:
       dns: [ 10.10.0.2 ]
       quad: "6"
-      net_id: SUBNET_ID
+      net_id: LS1_SUBNET
       security_groups: 
       - CLOUDFOUNDRY_SG
 
