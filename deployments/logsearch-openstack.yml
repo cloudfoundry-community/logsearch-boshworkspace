@@ -1,0 +1,51 @@
+---
+name: logsearch-openstack
+director_uuid: DIRECTOR_UUID
+releases:
+- name: logsearch
+  version: 19
+  git: https://github.com/logsearch/logsearch-boshrelease.git
+- name: logsearch-for-cloudfoundry
+  version: 3
+  git: https://github.com/logsearch/logsearch-for-cloudfoundry.git
+  path: logsearch-for-cloudfoundry-boshrelease
+
+stemcells:
+- name: bosh-openstack-kvm-ubuntu-trusty-go_agent
+  version: 2972
+
+templates:
+- logsearch/deployment.yml
+- logsearch/jobs.yml
+- logsearch/properties.yml
+- logsearch/infrastructure-openstack.yml
+- logsearch/networking.yml
+- logsearch/logstash-filters.yml
+
+meta:
+  skip-ssl-validation: true
+  api_host_header: SECRET
+  ingestor_cloudfoundry-firehose:
+    cf-domain: CF_DOMAIN
+    firehose-password: CF_ADMIN_PASS
+
+  networks:
+    ipmask: "IPMASK"
+    ls1:
+      dns: [ 8.8.8.8, 8.8.4.4 ]
+      quad: "6"
+      net_id: LS1_SUBNET
+      security_groups: 
+      - CLOUDFOUNDRY_SG
+
+  instances:
+    log_parser:               1 # MARKER_FOR_PROVISION
+    elasticsearch_persistent: 2 # MARKER_FOR_PROVISION
+
+  instance_types:
+    common: m1.medium
+    elasticsearch: m1.medium
+
+  persistent_disks:
+    queue: 5000 # more then memory of node
+    elasticsearch: 10000

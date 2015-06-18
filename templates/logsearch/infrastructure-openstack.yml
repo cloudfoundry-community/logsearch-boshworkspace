@@ -1,0 +1,75 @@
+meta:
+  environment: logsearch-openstack
+
+  stemcell:
+    name: bosh-openstack-kvm-ubuntu-trusty-go_agent
+    version: latest
+
+  instances:
+    api: (( merge || 1 ))
+    ingestor: (( merge || 1 ))
+    log_parser: (( merge || 1 ))
+    elasticsearch_persistent: (( merge || 1 ))
+
+  instance_types:
+    common: (( merge || "m1.small" ))
+    elasticsearch:  (( merge || "m1.small" ))
+
+  persistent_disks:
+    queue: (( merge || 1024 ))
+    elasticsearch: (( merge || 10240 ))
+
+
+update:
+  canaries: 1
+  max_in_flight: 50
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
+  serial: true
+
+compilation:
+  cloud_properties:
+    instance_type: (( meta.instance_types.common ))
+
+resource_pools:
+  - name: common
+    cloud_properties:
+      instance_type: (( meta.instance_types.common ))
+
+  - name: elasticsearch
+    cloud_properties:
+      instance_type: (( meta.instance_types.elasticsearch ))
+
+jobs:
+- name: api
+  instances: (( meta.instances.api ))
+  persistent_disk: (( meta.persistent_disks.elasticsearch ))
+  networks:
+  - name: ls1
+    static_ips: (( static_ips(0,5) ))
+
+- name: ingestor
+  instances: (( meta.instances.ingestor ))
+  networks:
+  - name: ls1
+    static_ips: (( static_ips(1,6) ))
+
+- name: queue
+  instances: 1
+  persistent_disk: (( meta.persistent_disks.queue ))
+  networks:
+  - name: ls1
+    static_ips: (( static_ips(2) ))
+
+- name: log_parser
+  instances: (( meta.instances.log_parser ))
+
+- name: elasticsearch_persistent
+  instances: (( meta.instances.elasticsearch_persistent ))
+  persistent_disk: (( meta.persistent_disks.elasticsearch ))
+  networks:
+  - name: ls1
+    static_ips: (( static_ips(3,4,7,8,9) ))
+
+
+networks: (( merge ))

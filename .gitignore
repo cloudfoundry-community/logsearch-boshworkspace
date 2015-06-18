@@ -4,3 +4,4 @@
 .stubs*
 addons
 tmp
+*.DS_Store
