@@ -23,6 +23,7 @@ templates:
 - logsearch/logstash-filters.yml
 
 meta:
+  skip-ssl-validation: true
   api_host_header: SECRET
   ingestor_cloudfoundry-firehose:
     cf-domain: CF_DOMAIN
