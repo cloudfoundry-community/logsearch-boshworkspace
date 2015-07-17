@@ -34,7 +34,7 @@ meta:
   networks:
     ls1:
       dns: [ 10.10.0.2 ]
-      quad: "6"
+      quad: "7"
       net_id: LS1_SUBNET
       security_groups: 
       - CLOUDFOUNDRY_SG

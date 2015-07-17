@@ -33,7 +33,7 @@ meta:
     ipmask: "IPMASK"
     ls1:
       dns: [ 8.8.8.8, 8.8.4.4 ]
-      quad: "6"
+      quad: "7"
       net_id: LS1_SUBNET
       security_groups: 
       - CLOUDFOUNDRY_SG

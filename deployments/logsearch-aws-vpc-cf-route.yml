@@ -25,7 +25,7 @@ meta:
   environment: logsearch-aws-vpc
   zones:
     z1:
-      ipmask: 10.10.6
+      ipmask: 10.10.7
       subnet_id: SUBNET_ID
       az: us-west-2a
   security_groups: [CLOUDFOUNDRY_SG]
