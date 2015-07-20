@@ -27,6 +27,7 @@ meta:
   ingestor_cloudfoundry-firehose:
     cf-domain: CF_DOMAIN
     firehose-password: CF_ADMIN_PASS
+  skip-ssl-validation: false
 
   zones:
     z1: LS1_SUBNET_AZ
